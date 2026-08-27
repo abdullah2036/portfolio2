@@ -5,139 +5,213 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ABDULLAH // Portfolio</title>
+  <meta name="description"
+    content="Abdullah Bokhary — Full-Stack Developer & Data Scientist specializing in React, 3D Web, and robust architectures.">
 
-  <!-- Fonts -->
+  <!-- Fonts: Orbitron (headings) + Inter (body) + JetBrains Mono (code/labels) + Cairo (Arabic) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500&family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;700;900&display=swap"
     rel="stylesheet">
 
-  <!-- Styles -->
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- BACKGROUND ELEMENTS -->
-  <div class="grid-bg"></div>
-  <div class="scanline"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
+  <!-- WebGL / Animation Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
-  <!-- NAVIGATION -->
-  <nav>
-    <a href="#" class="nav-logo">SYS<span>://</span>ABDULLAH</a>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#services">Capabilities</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <a href="#contact" class="nav-cta">Get in Touch</a>
-    <div class="hamburger" onclick="toggleMenu(this)">
-      <span></span><span></span><span></span>
+  <!-- WEBGL PARTICLE CANVAS -->
+  <canvas id="webgl-canvas" aria-hidden="true"></canvas>
+
+  <!-- SCROLL PROGRESS SIDEBAR -->
+  <div class="scroll-progress" aria-hidden="true">
+    <div class="sp-track">
+      <div class="sp-fill" id="spFill"></div>
     </div>
+    <div class="sp-labels">
+      <span data-section="hero">01</span>
+      <span data-section="about">02</span>
+      <span data-section="services">03</span>
+      <span data-section="projects">04</span>
+      <span data-section="contact">05</span>
+    </div>
+  </div>
+
+  <!-- BACKGROUND LAYERS -->
+  <div class="nebula-1" aria-hidden="true"></div>
+  <div class="nebula-2" aria-hidden="true"></div>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <!-- LANGUAGE TOGGLE -->
+  <button id="langToggle" class="lang-toggle" aria-label="Toggle language">عربي</button>
+
+  <!-- ══════════════════════════════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════════════════════════════ -->
+  <nav id="mainNav">
+    <a href="#" class="nav-logo">
+      <span class="logo-bracket">[</span>AB<span class="logo-slash">/</span>DEV<span class="logo-bracket">]</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about"><span class="nav-num">01.</span><span data-i18n="nav_about">About</span></a></li>
+      <li><a href="#services"><span class="nav-num">02.</span><span data-i18n="nav_skills">Skills</span></a></li>
+      <li><a href="#projects"><span class="nav-num">03.</span><span data-i18n="nav_projects">Projects</span></a></li>
+      <li><a href="#contact"><span class="nav-num">04.</span><span data-i18n="nav_contact">Contact</span></a></li>
+    </ul>
+    <a href="#contact" class="nav-cta" id="navCta">
+      <span class="cta-dot"></span>
+      <span data-i18n="nav_cta">AVAILABLE</span>
+    </a>
+    <button class="hamburger" onclick="toggleMenu(this)" id="hamburger" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
-  <!-- HERO -->
+  <!-- ══════════════════════════════════════════════════════════
+       HERO
+  ══════════════════════════════════════════════════════════ -->
   <section id="hero">
     <div class="container">
       <div class="hero-grid">
 
+        <!-- LEFT: Content -->
         <div class="hero-content">
-          <p class="hero-eyebrow">Open for opportunities</p>
-          <h1 class="hero-name">Hello, I'm<br><span class="accent">abdullah.</span></h1>
-          <p class="hero-role"><strong>Junior Web Developer</strong> &amp; CS Student</p>
-          <p class="hero-desc">Building modern web applications and exploring cybersecurity fundamentals. Powered by
-            computer science basics, modern AI tooling, and a passion for learning.</p>
+
+          <div class="hero-eyebrow">
+            <span class="ey-line"></span>
+            <span data-i18n="hero_eyebrow">SYSTEM_ONLINE</span>
+            <span class="ey-dot"></span>
+          </div>
+
+          <h1 class="hero-name" data-text="ABDULLAH.">ABDULLAH.</h1>
+
+          <div class="hero-subtitle">
+            <span class="sub-prefix">// </span>
+            <span id="heroType"></span><span class="type-cursor">█</span>
+          </div>
+
+          <p class="hero-desc" data-i18n="hero_desc">
+            I engineer modern, high-performance web applications and robust digital architectures.
+            Driven by complex problem-solving, advanced AI tooling, and a relentless pursuit of excellence.
+          </p>
+
           <div class="hero-actions">
-            <a href="#projects" class="btn btn-primary">View Work &rarr;</a>
-            <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+            <a href="#projects" class="btn btn-primary" id="btnWork">
+              <span data-i18n="hero_btn_work">VIEW WORK</span> <span class="btn-arrow">→</span>
+            </a>
+            <a href="#contact" class="btn btn-ghost" id="btnContact">
+              <span data-i18n="hero_btn_contact">INITIATE CONTACT</span>
+            </a>
           </div>
-          <div class="status-bar">
-            <div class="status-item"><span class="status-dot"></span>Open to opportunities</div>
-            <div class="status-item"><span class="status-dot yellow"></span>Based in Khobar, SA</div>
+
+          <div class="hud-bar">
+            <div class="hud-item">
+              <span class="hud-dot active-dot"></span>
+              <span class="hud-label" data-i18n="hud_status_label">STATUS </span>
+              <span class="hud-val" data-i18n="hud_status_val"> OPEN TO ROLES</span>
+            </div>
+            <div class="hud-divider"></div>
+            <div class="hud-item">
+              <span class="hud-dot loc-dot"></span>
+              <span class="hud-label" data-i18n="hud_base_label">BASE </span>
+              <span class="hud-val" data-i18n="hud_base_val"> KHOBAR, SA</span>
+            </div>
           </div>
+
         </div>
 
-        <div class="hero-visual">
-          <div class="terminal-card">
-            <div class="terminal-header">
-              <div class="t-dot"></div>
-              <div class="t-dot"></div>
-              <div class="t-dot"></div>
-              <span class="t-title">abdullah@dev-lab ~ bash</span>
-            </div>
-            <div class="terminal-body">
-              <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd">whoami</span></div>
-              <div class="t-output"><span class="ok">abdullah</span> &mdash; junior dev &amp; DS student</div>
-              <br>
-              <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd">cat skills.txt</span></div>
-              <div class="t-output"><span class="hi">&rarr; Frontend</span> &middot; React &middot; JavaScript &middot;
-                3D Web</div>
-              <div class="t-output"><span class="hi">&rarr; Stack</span> &middot; AI Tools &middot; Python &middot;
-                HTML/CSS</div>
-              <div class="t-output"><span class="hi">&rarr; Focus</span> &middot; Cybersecurity &middot; Red Teaming
-                Basics</div>
-              <br>
-              <div class="t-line"><span class="t-prompt">$</span><span class="t-cmd">status --check</span></div>
-              <div class="t-output"><span class="ok">&#10003;</span> Open to junior roles &amp; internships</div>
-              <div class="t-output"><span class="warn">!</span> Flexible &amp; actively building projects</div>
-              <br>
-              <div class="t-line"><span class="t-prompt">$</span><span class="cursor-blink"></span></div>
-            </div>
-          </div>
+        <!-- RIGHT: Hero visual area (particles take over background) -->
+        <div class="hero-visual" aria-hidden="true">
         </div>
 
       </div>
     </div>
+
+    <!-- Scroll cue -->
+    <div class="scroll-cue" aria-hidden="true">
+      <div class="sc-line"></div>
+      <span class="sc-txt" data-i18n="scroll_cue">SCROLL</span>
+    </div>
   </section>
 
-  <!-- ABOUT -->
+  <!-- ══════════════════════════════════════════════════════════
+       ABOUT
+  ══════════════════════════════════════════════════════════ -->
   <section id="about">
     <div class="container">
+
+      <div class="section-header reveal">
+        <p class="section-tag" data-i18n="about_tag">// IDENTITY_MATRIX</p>
+        <h2 class="section-title"><span data-i18n="about_title_1">Strategic Mind.</span><br><span class="accent-span"
+            data-i18n="about_title_2">Engineered Solutions.</span></h2>
+      </div>
+
       <div class="about-grid">
 
-        <div class="about-stats reveal">
-          <div class="stat-box">
-            <div class="stat-num">B.Sc.</div>
-            <div class="stat-label">Data Science &amp; Cyber Student</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num">React</div>
-            <div class="stat-label">3D &amp; UI Development</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num">AI</div>
-            <div class="stat-label">Driven Workflow</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num">100%</div>
-            <div class="stat-label">Flexible &amp; Adaptable</div>
-          </div>
-        </div>
-
         <div class="about-text reveal">
-          <p class="section-tag">About</p>
-          <h2 class="section-title">Curious Mind.<br>Building &amp; Growing.</h2>
-          <p>I'm an enthusiastic junior developer studying Data Science and Cybersecurity with a strong foundation in
-            computer science and web development. I focus on building clean, interactive web experiences using modern
-            frontend technologies like React and 3D web frameworks.</p>
-          <p>I actively leverage AI tooling to accelerate development and tackle fullstack concepts. I also have a keen
-            interest in red teaming and cybersecurity fundamentals, continuously expanding my skill set while remaining
-            adaptable to new challenges and tech stacks.</p>
+          <p data-i18n="about_p1">I am a Full-Stack Developer bridging the gap between <span class="hl">Data
+              Science</span> and <span class="hl">Advanced Web Architecture</span>. I architect scalable systems and
+            craft immersive, interactive web experiences that demand attention and deliver results.</p>
+          <p data-i18n="about_p2">Leveraging <span class="hl">modern AI tooling</span> to multiply output and focusing
+            heavily on performance and security, I don't just write code—I build robust, commercial-grade digital
+            infrastructure.</p>
           <div class="tag-list">
             <span class="tag">React</span>
-            <span class="tag">JavaScript</span>
-            <span class="tag">HTML5 / CSS3</span>
-            <span class="tag">3D Web / WebGL</span>
+            <span class="tag">JavaScript / TS</span>
+            <span class="tag">System Architecture</span>
+            <span class="tag">3D WebGL</span>
             <span class="tag">Python</span>
             <span class="tag">Data Science</span>
-            <span class="tag">Cybersecurity Basics</span>
-            <span class="tag">AI Tooling</span>
-            <span class="tag">Git &amp; GitHub</span>
+            <span class="tag">Cybersecurity</span>
+            <span class="tag">AI Workflows</span>
+            <span class="tag">Full-Stack</span>
             <span class="tag">Linux</span>
+            <span class="tag">PHP</span>
+            <span class="tag">MySQL</span>
+          </div>
+        </div>
+
+        <div class="about-cards">
+          <div class="holo-card reveal">
+            <div class="hc-scan"></div>
+            <div class="hc-corner hc-tl"></div>
+            <div class="hc-corner hc-tr"></div>
+            <div class="hc-corner hc-bl"></div>
+            <div class="hc-corner hc-br"></div>
+            <div class="hc-num">B.Sc.</div>
+            <div class="hc-label" data-i18n="card_1_label">Data Science</div>
+          </div>
+          <div class="holo-card reveal">
+            <div class="hc-scan"></div>
+            <div class="hc-corner hc-tl"></div>
+            <div class="hc-corner hc-tr"></div>
+            <div class="hc-corner hc-bl"></div>
+            <div class="hc-corner hc-br"></div>
+            <div class="hc-num">Web</div>
+            <div class="hc-label" data-i18n="card_2_label">Full-Stack Architecture</div>
+          </div>
+          <div class="holo-card reveal">
+            <div class="hc-scan"></div>
+            <div class="hc-corner hc-tl"></div>
+            <div class="hc-corner hc-tr"></div>
+            <div class="hc-corner hc-bl"></div>
+            <div class="hc-corner hc-br"></div>
+            <div class="hc-num">AI</div>
+            <div class="hc-label" data-i18n="card_3_label">Multiplied Workflow</div>
+          </div>
+          <div class="holo-card reveal">
+            <div class="hc-scan"></div>
+            <div class="hc-corner hc-tl"></div>
+            <div class="hc-corner hc-tr"></div>
+            <div class="hc-corner hc-bl"></div>
+            <div class="hc-corner hc-br"></div>
+            <div class="hc-num">100%</div>
+            <div class="hc-label" data-i18n="card_4_label">Execution Focused</div>
           </div>
         </div>
 
@@ -145,111 +219,237 @@
     </div>
   </section>
 
-  <!-- SERVICES -->
+  <!-- ══════════════════════════════════════════════════════════
+       CAPABILITIES
+  ══════════════════════════════════════════════════════════ -->
   <section id="services">
     <div class="container">
+
       <div class="services-header reveal">
         <div>
-          <p class="section-tag">Capabilities</p>
-          <h2 class="section-title">What I bring<br>to the table.</h2>
+          <p class="section-tag" data-i18n="services_tag">// CAPABILITY_MODULES</p>
+          <h2 class="section-title"><span data-i18n="services_title_1">The Arsenal.</span><br><span class="accent-span"
+              data-i18n="services_title_2">Technical Mastery.</span></h2>
         </div>
-        <p class="section-sub">A flexible, growth-oriented skill set combining web development, modern AI tools, and
-          foundational computer science.</p>
+        <p class="section-sub" data-i18n="services_sub">A highly adaptable technical stack designed to handle everything
+          from complex backend systems to high-fidelity frontend experiences.</p>
       </div>
+
       <div class="services-grid">
-        <div class="service-card reveal">
-          <span class="service-icon">&#x2B21;</span><span class="service-num">01</span>
-          <div class="service-title">Frontend &amp; 3D Web</div>
-          <p class="service-desc">Building responsive, modern user interfaces using React, JavaScript, and 3D web
-            elements for dynamic visual experiences.</p>
+
+        <div class="service-card reveal" id="svc01">
+          <div class="svc-num">01</div>
+          <div class="svc-icon">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="3" y="7" width="38" height="28" rx="2" stroke="currentColor" stroke-width="1.5" />
+              <polyline points="11,19 18,26 11,33" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <line x1="20" y1="33" x2="32" y2="33" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              <line x1="3" y1="13" x2="41" y2="13" stroke="currentColor" stroke-width="1" opacity="0.35" />
+              <circle cx="7" cy="10" r="1.5" fill="currentColor" opacity="0.6" />
+              <circle cx="12" cy="10" r="1.5" fill="currentColor" opacity="0.6" />
+            </svg>
+          </div>
+          <div class="svc-title" data-i18n="svc_1_title">Advanced Frontend</div>
+          <p class="svc-desc" data-i18n="svc_1_desc">Engineering immersive, high-performance interfaces using React,
+            WebGL, and complex state management.</p>
         </div>
-        <div class="service-card reveal">
-          <span class="service-icon">&#x2B21;</span><span class="service-num">02</span>
-          <div class="service-title">Web App Prototyping</div>
-          <p class="service-desc">Combining computer science fundamentals and modern AI tooling to quickly build and
-            iterate on fullstack web concepts.</p>
+
+        <div class="service-card reveal" id="svc02">
+          <div class="svc-num">02</div>
+          <div class="svc-icon">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="22,4 40,13 40,31 22,40 4,31 4,13" stroke="currentColor" stroke-width="1.5" />
+              <polygon points="22,13 32,18 32,26 22,31 12,26 12,18" stroke="currentColor" stroke-width="1"
+                opacity="0.5" />
+              <circle cx="22" cy="22" r="3" fill="currentColor" opacity="0.9" />
+            </svg>
+          </div>
+          <div class="svc-title" data-i18n="svc_2_title">Full-Stack Architecture</div>
+          <p class="svc-desc" data-i18n="svc_2_desc">Designing robust APIs and database structures with PHP/MySQL and
+            Node to support scalable applications.</p>
         </div>
-        <div class="service-card reveal">
-          <span class="service-icon">&#x2B21;</span><span class="service-num">03</span>
-          <div class="service-title">Data Science &amp; Python</div>
-          <p class="service-desc">Applying foundational data science principles, Python scripting, and data analysis to
-            solve real-world problems.</p>
+
+        <div class="service-card reveal" id="svc03">
+          <div class="svc-num">03</div>
+          <div class="svc-icon">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polyline points="4,36 12,22 18,28 26,10 32,18 40,6" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" />
+              <circle cx="12" cy="22" r="2.5" fill="currentColor" />
+              <circle cx="26" cy="10" r="2.5" fill="currentColor" />
+              <circle cx="40" cy="6" r="2.5" fill="currentColor" />
+              <line x1="4" y1="40" x2="40" y2="40" stroke="currentColor" stroke-width="1" opacity="0.35" />
+              <line x1="4" y1="4" x2="4" y2="40" stroke="currentColor" stroke-width="1" opacity="0.35" />
+            </svg>
+          </div>
+          <div class="svc-title" data-i18n="svc_3_title">Data Science & Analysis</div>
+          <p class="svc-desc" data-i18n="svc_3_desc">Extracting critical insights using Python, machine learning models,
+            and complex statistical analysis.</p>
         </div>
-        <div class="service-card reveal">
-          <span class="service-icon">&#x2B21;</span><span class="service-num">04</span>
-          <div class="service-title">Security Awareness</div>
-          <p class="service-desc">Strong curiosity for red teaming, ethical hacking fundamentals, and secure coding
-            practices to build better applications.</p>
+
+        <div class="service-card reveal" id="svc04">
+          <div class="svc-num">04</div>
+          <div class="svc-icon">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M22 4L6 11V23C6 31.5 13.2 38.5 22 41C30.8 38.5 38 31.5 38 23V11L22 4Z" stroke="currentColor"
+                stroke-width="1.5" />
+              <polyline points="15,22 20,27 29,17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div class="svc-title" data-i18n="svc_4_title">Security & Red Teaming</div>
+          <p class="svc-desc" data-i18n="svc_4_desc">Applying offensive security principles to stress-test systems and
+            guarantee robust, secure deployments.</p>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- PROJECTS -->
+  <!-- ══════════════════════════════════════════════════════════
+       PROJECTS
+  ══════════════════════════════════════════════════════════ -->
   <section id="projects">
     <div class="container">
+
       <div class="projects-header reveal">
         <div>
-          <p class="section-tag">Featured Work</p>
-          <h2 class="section-title">Real Projects</h2>
+          <p class="section-tag" data-i18n="projects_tag">// MISSION_LOGS</p>
+          <h2 class="section-title" data-i18n="projects_title">Deployed Projects</h2>
         </div>
         <a href="https://github.com/abdullah2036" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"
-          style="white-space:nowrap">See GitHub &rarr;</a>
+          id="btnGithub">
+          <span data-i18n="projects_btn">VIEW ARCHIVE</span> →
+        </a>
       </div>
+
       <div class="projects-grid">
 
+        <!-- PROJECT 01 — Maher Tech v4 -->
         <a href="https://github.com/abdullah2036/maher-tech-v4" target="_blank" rel="noopener noreferrer"
-          class="project-card featured reveal">
-          <div>
-            <div class="project-meta">
-              <span class="project-type">Featured &middot; Frontend &amp; 3D</span>
-              <span class="project-arrow">&#x2197;</span>
+          class="project-card reveal" id="projMaher" data-tilt>
+          <div class="proj-header">
+            <span class="proj-filenum">FILE://001</span>
+            <span class="proj-badge featured-badge" data-i18n="badge_featured">FEATURED</span>
+          </div>
+          <div class="proj-body">
+            <div class="proj-meta">
+              <span class="proj-type" data-i18n="proj_1_type">Frontend Architecture</span>
+              <span class="proj-arrow">↗</span>
             </div>
-            <h3 class="project-title">Maher Tech v4</h3>
-            <p class="project-desc">A modern frontend web project demonstrating skills in React, 3D web
-              elements/frameworks, dynamic UI components, and responsive design.</p>
-            <div class="project-stack">
+            <h3 class="proj-title">Maher Tech v4</h3>
+            <p class="proj-desc" data-i18n="proj_1_desc">A high-fidelity frontend deployment showcasing mastery over
+              React, WebGL, and dynamic UI states. Built for scale with commercial-grade component architecture.</p>
+            <div class="proj-stack">
               <span class="stack-tag">React</span>
-              <span class="stack-tag">3D Web Elements</span>
+              <span class="stack-tag">3D WebGL</span>
               <span class="stack-tag">JavaScript</span>
               <span class="stack-tag">CSS3</span>
             </div>
           </div>
-          <div class="featured-badge">FEATURED PROJECT</div>
+          <div class="proj-glow-bg"></div>
+        </a>
+
+        <!-- PROJECT 02 — Clinic Management System -->
+        <a href="https://github.com/abdullah2036/clinic" target="_blank" rel="noopener noreferrer"
+          class="project-card reveal" id="projClinic" data-tilt>
+          <div class="proj-header">
+            <span class="proj-filenum">FILE://002</span>
+            <span class="proj-badge academic-badge" data-i18n="badge_academic">ACADEMIC WORK</span>
+          </div>
+          <div class="proj-body">
+            <div class="proj-meta">
+              <span class="proj-type" data-i18n="proj_2_type">Full-Stack System</span>
+              <span class="proj-arrow">↗</span>
+            </div>
+            <h3 class="proj-title" data-i18n="proj_2_title">Clinic Management System</h3>
+            <p class="proj-desc" data-i18n="proj_2_desc">A complete server-side web application integrating PHP backends
+              with a MySQL database architecture. Demonstrates core full-stack routing and data handling. <em
+                data-i18n="proj_2_note">Academic demonstration case study.</em></p>
+            <div class="proj-stack">
+              <span class="stack-tag">PHP</span>
+              <span class="stack-tag">MySQL</span>
+              <span class="stack-tag">HTML / CSS</span>
+              <span class="stack-tag">JavaScript</span>
+            </div>
+          </div>
+          <div class="proj-glow-bg"></div>
         </a>
 
       </div>
     </div>
   </section>
 
-  <!-- CONTACT -->
+  <!-- ══════════════════════════════════════════════════════════
+       HEROIC / MANIFESTO (New)
+  ══════════════════════════════════════════════════════════ -->
+  <section id="heroic">
+    <div class="container heroic-container">
+      <h2 class="heroic-text reveal" data-i18n="heroic_text">
+        What can I do?<br>
+        <span class="heroic-glow">I make it happen.</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       CONTACT
+  ══════════════════════════════════════════════════════════ -->
   <section id="contact">
     <div class="container">
       <div class="contact-inner">
-        <p class="section-tag reveal">Contact</p>
-        <h2 class="section-title reveal">Let's connect.</h2>
-        <p class="section-sub reveal" style="margin: 0 auto 8px;">Whether you have an entry-level opportunity, a project
-          idea, or just want to connect, feel free to reach out!</p>
-        <a href="mailto:bukhariabdulla77@gmail.com" class="contact-email reveal">bukhariabdulla77@gmail.com</a>
-        <div class="divider reveal"></div>
-        <div class="contact-links reveal">
-          <a href="https://github.com/abdullah2036" target="_blank" rel="noopener noreferrer"
-            class="contact-link">&#x2B21; GitHub</a>
-          <a href="https://www.linkedin.com/in/abdullah-bokhary-840315326/" target="_blank" rel="noopener noreferrer"
-            class="contact-link">&#x2B21; LinkedIn</a>
+
+        <p class="section-tag reveal" data-i18n="contact_tag" style="justify-content:center; margin-bottom:16px;">//
+          OPEN_CHANNEL</p>
+        <h2 class="section-title reveal" id="contactTitle" data-i18n="contact_title">LET'S CONNECT.</h2>
+        <p class="section-sub reveal" data-i18n="contact_sub"
+          style="margin: 0 auto 48px; text-align:center; max-width:500px;">
+          Whether you need a complex system built from scratch, or an elite frontend experience engineered—reach out.
+        </p>
+
+        <div class="contact-transmission reveal">
+          <div class="trans-label" data-i18n="contact_label">DIRECT CHANNEL</div>
+          <a href="mailto:bukhariabdulla77@gmail.com" class="contact-email" id="contactEmail">
+            bukhariabdulla77@gmail.com
+          </a>
         </div>
+
+        <div class="divider reveal" style="margin: 48px 0;"></div>
+
+        <div class="contact-links reveal">
+          <a href="https://github.com/abdullah2036" target="_blank" rel="noopener noreferrer" class="contact-link"
+            id="linkGithub">
+            <svg class="cl-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+            </svg>
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/in/abdullah-bokhary-840315326/" target="_blank" rel="noopener noreferrer"
+            class="contact-link" id="linkLinkedin">
+            <svg class="cl-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+            </svg>
+            LinkedIn
+          </a>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- ══════════════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════════════ -->
   <footer>
-    <span class="footer-copy">&copy; 2026 <span>ABDULLAH</span> &mdash; Junior Developer Portfolio.</span>
-    <span class="footer-copy" style="font-size:0.62rem;">Built with HTML &middot; CSS &middot; JS &mdash; Clean &amp;
-      Authentic.</span>
+    <span class="footer-left">
+      <span class="f-bracket">[</span> &copy; 2026 ABDULLAH BOKHARY <span class="f-bracket">]</span>
+    </span>
+    <span class="footer-right">ENGINEERED WITH PRECISION</span>
   </footer>
 
-  <!-- Scripts -->
   <script src="main.js"></script>
 
 </body>
